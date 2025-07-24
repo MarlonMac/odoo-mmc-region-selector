@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_region_selector_admin,res.company.region.selector system access,model_res_company_region_selector,base.group_system,1,1,1,1
+access_region_selector_user,res.company.region.selector user access,model_res_company_region_selector,base.group_user,1,0,0,0
+access_mmc_business_unit_system,mmc.business.unit system access,model_mmc_business_unit,base.group_system,1,1,1,1
+access_mmc_business_unit_user,mmc.business.unit user access,model_mmc_business_unit,base.group_user,1,1,0,0
