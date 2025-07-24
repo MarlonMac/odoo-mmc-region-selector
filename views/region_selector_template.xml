@@ -1,4 +1,82 @@
 <odoo>
+    <!-- SELECTOR PARA MÓVIL: Siempre visible fuera del menú colapsado -->
+    <template id="region_selector_mobile_navbar" inherit_id="website.template_header_default" name="Region Selector Mobile" priority="98">
+        <xpath expr="//t[@t-call='website.navbar_toggler']" position="replace">
+            <div class="d-flex align-items-center ms-auto">
+                
+                <t t-set="all_active_regions" t-value="request.env['res.company.region.selector'].sudo().search([('is_active', '=', True)], order='name')"/>
+                <t t-set="current_website_id" t-value="request.website.id"/>
+                <t t-set="current_region_info" t-value="all_active_regions.filtered(lambda r: r.website_id.id == current_website_id)[:1]"/>
+                <t t-if="current_region_info and current_region_info.business_unit_id">
+                    <t t-set="current_bu_id" t-value="current_region_info.business_unit_id.id"/>
+                    <t t-set="current_bu_name" t-value="current_region_info.business_unit_id.name"/>
+                    <t t-set="other_regions_in_bu"
+                    t-value="all_active_regions.filtered(lambda r: r.business_unit_id.id == current_bu_id and r.id != current_region_info.id)"/>
+                    <t t-if="other_regions_in_bu">
+                        <div class="d-lg-none dropdown region-selector-mobile me-2">
+                            <button class="btn btn-link nav-link dropdown-toggle p-1"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    t-att-title="current_bu_name + ' - ' + current_region_info.name">
+                                <t t-set="current_country_code" t-value="current_region_info.country_id.code and current_region_info.country_id.code.lower()"/>
+                                <t t-if="current_country_code">
+                                    <img class="align-middle"
+                                        t-attf-src="/base/static/img/country_flags/#{current_country_code}.png"
+                                        t-att-alt="current_region_info.country_id.name or current_region_info.name"
+                                        style="height: 1.5em; vertical-align: -0.15em;"
+                                        loading="lazy"/>
+                                </t>
+                                <t t-elif="current_region_info.flag_icon">
+                                    <img t-attf-src="data:image/png;base64,#{current_region_info.flag_icon}"
+                                        t-att-alt="current_region_info.name"
+                                        style="height: 1.5em; vertical-align: -0.15em;"
+                                        class="align-middle"/>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-globe align-middle"
+                                    style="font-size: 1.2em;"
+                                    role="img"
+                                    aria-label="Icono de región global"></i>
+                                </t>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header" t-esc="current_bu_name"/></li>
+                                <t t-foreach="other_regions_in_bu" t-as="region_site">
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center"
+                                        t-att-href="region_site.website_id.domain if region_site.website_id and region_site.website_id.domain else '#'"
+                                        t-att-title="region_site.business_unit_id.name + ' - ' + region_site.name">
+                                            
+                                            <t t-set="site_country_code" t-value="region_site.country_id.code and region_site.country_id.code.lower()"/>
+                                            <t t-if="site_country_code">
+                                                <img class="me-2"
+                                                    t-attf-src="/base/static/img/country_flags/#{site_country_code}.png"
+                                                    t-att-alt="region_site.country_id.name or region_site.name"
+                                                    style="height: 1em; vertical-align: -0.15em;"
+                                                    loading="lazy"/>
+                                            </t>
+                                            <t t-elif="region_site.flag_icon">
+                                                <img t-attf-src="data:image/png;base64,#{region_site.flag_icon}" t-att-alt="region_site.name" height="14" class="me-2"/>
+                                            </t>
+                                            <t t-else="">
+                                                <i class="fa fa-fw fa-map-marker me-2" role="img" aria-label="Icono de marcador de mapa"></i>
+                                            </t>
+                                            <span t-esc="region_site.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
+                </t>
+
+                <t t-call="website.navbar_toggler"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- SELECTOR PARA DESKTOP: Dentro del menú colapsado (versión original modificada) -->
     <template id="region_selector_header_insert_top_menu" inherit_id="website.navbar_nav" name="Region Selector Header Top Menu" priority="99">
         <xpath expr="//ul[@id='top_menu']" position="inside">
             <t t-set="all_active_regions" t-value="request.env['res.company.region.selector'].sudo().search([('is_active', '=', True)], order='name')"/>
@@ -12,8 +90,12 @@
                    t-value="all_active_regions.filtered(lambda r: r.business_unit_id.id == current_bu_id and r.id != current_region_info.id)"/>
 
                 <t t-if="other_regions_in_bu">
-                    <li class="nav-item dropdown ms-2 region-selector-item"> 
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" role="button"
+                    <!-- Selector desktop: solo visible en pantallas grandes -->
+                    <li class="nav-item dropdown ms-2 region-selector-item d-none d-lg-block"> 
+                        <a href="#" class="nav-link dropdown-toggle" 
+                           data-bs-toggle="dropdown" 
+                           aria-expanded="false" 
+                           role="button"
                            t-att-title="current_bu_name + ' - ' + current_region_info.name">
 
                             <t t-set="current_country_code" t-value="current_region_info.country_id.code and current_region_info.country_id.code.lower()"/>
@@ -21,17 +103,24 @@
                                 <img class="me-1 align-middle" 
                                      t-attf-src="/base/static/img/country_flags/#{current_country_code}.png"
                                      t-att-alt="current_region_info.country_id.name or current_region_info.name"
-                                     style="height: 1em; vertical-align: -0.15em;" loading="lazy"/>
+                                     style="height: 1em; vertical-align: -0.15em;" 
+                                     loading="lazy"/>
                             </t>
                             <t t-elif="current_region_info.flag_icon">
-                                <img t-attf-src="data:image/png;base64,#{current_region_info.flag_icon}" t-att-alt="current_region_info.name" height="16" class="me-1 align-middle"/>
+                                <img t-attf-src="data:image/png;base64,#{current_region_info.flag_icon}" 
+                                     t-att-alt="current_region_info.name" 
+                                     height="16" 
+                                     class="me-1 align-middle"/>
                             </t>
                             <t t-else="">
-                                <i class="fa fa-globe me-1 align-middle" role="img" aria-label="Icono de región global"></i>
+                                <i class="fa fa-globe me-1 align-middle" 
+                                   role="img" 
+                                   aria-label="Icono de región global"></i>
                             </t>
 
-                            <span class="d-none d-md-inline align-middle" t-esc="current_region_info.name"/>
+                            <span class="align-middle" t-esc="current_region_info.name"/>
                         </a>
+                        
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><h6 class="dropdown-header" t-esc="current_bu_name"/></li>
                             <t t-foreach="other_regions_in_bu" t-as="region_site">
@@ -49,10 +138,15 @@
                                                  loading="lazy"/>
                                         </t>
                                         <t t-elif="region_site.flag_icon">
-                                            <img t-attf-src="data:image/png;base64,#{region_site.flag_icon}" t-att-alt="region_site.name" height="14" class="me-2"/>
+                                            <img t-attf-src="data:image/png;base64,#{region_site.flag_icon}" 
+                                                 t-att-alt="region_site.name" 
+                                                 height="14" 
+                                                 class="me-2"/>
                                         </t>
                                         <t t-else="">
-                                            <i class="fa fa-fw fa-map-marker me-2" role="img" aria-label="Icono de marcador de mapa"></i>
+                                            <i class="fa fa-fw fa-map-marker me-2" 
+                                               role="img" 
+                                               aria-label="Icono de marcador de mapa"></i>
                                         </t>
 
                                         <span t-esc="region_site.name"/>

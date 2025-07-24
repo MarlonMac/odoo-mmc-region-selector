@@ -1,6 +1,6 @@
 {
     "name": "Region Selector",
-    "version": "16.0.1.0.3", 
+    "version": "16.0.1.0.4", 
     "category": "Website",
     "summary": "Selector dinámico de región para sitios multicompañía, agrupado por unidad de negocio.",
     "author": "Marlon Macario",

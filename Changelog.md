@@ -4,6 +4,16 @@ Todos los cambios notables en este proyecto serán documentados en este archivo.
 
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+### [16.0.1.0.4] - 2025-07-24
+
+#### Añadido
+
+* **Visibilidad en Navegación Móvil:** El selector de región ahora es permanentemente visible en la barra de navegación móvil, posicionado junto al menú de hamburguesa. Esto mejora drásticamente la usabilidad, permitiendo al usuario identificar la región actual sin necesidad de abrir el menú.
+
+#### Corregido
+
+* **Posicionamiento Responsivo:** Se refina la estructura de la plantilla para agrupar el selector con el botón del menú de hamburguesa, asegurando que se mantengan juntos y alineados a la derecha en todos los tamaños de pantalla móvil.
+
 ### [16.0.1.0.3] - 2025-07-23
 
 #### Corregido

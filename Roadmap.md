@@ -2,6 +2,12 @@
 
 Aquí se detallan las posibles futuras mejoras y características para el módulo `mmc_region_selector`.
 
+### Completado
+
+* **[Frontend] v16.0.1.0.4:** El selector de región se muestra fuera del contenedor (hamburger) del navbar para que el usuario pueda identificar fácilmente en qué sitio se encuentra sin necesidad de abrir el menú.
+
+---
+
 ### Próxima Versión (v16.0.2.0)
 
 #### Futuras Ideas 🚀
@@ -18,4 +24,3 @@ Aquí se detallan las posibles futuras mejoras y características para el módul
             * Costa Rica
 * **[UI/UX]** Permitir la personalización del estilo del selector (colores, tamaño) desde las opciones de configuración del backend, sin necesidad de modificar el código.
 * **[Backend]** Mejorar la vista de configuración para que sea posible ordenar las regiones mediante drag-and-drop.
-* **[Frontend]** Mostrar el selector de región fuera del contenedor (hamburger) del navbar para que el usuario pueda identificar fácilmente en qué sitio se encuentra sin necesidad de abrir el menú.
